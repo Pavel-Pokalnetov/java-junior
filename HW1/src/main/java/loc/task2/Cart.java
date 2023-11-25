@@ -3,6 +3,7 @@ package loc.task2;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * Корзина
@@ -51,19 +52,10 @@ public class Cart <T extends Food>{
         boolean fats = false;
         boolean carbohydrates = false;
 
-        for (var food : foodstuffs)
-        {
-            if (!proteins && food.getProteins())
-                proteins = true;
-            else
-            if (!fats && food.getFats())
-                fats = true;
-            else
-            if (!carbohydrates && food.getCarbohydrates())
-                carbohydrates = true;
-            if (proteins && fats && carbohydrates)
-                break;
-        }
+        if(foodstuffs.stream().anyMatch(Food::getProteins)) proteins=true;
+        if(foodstuffs.stream().anyMatch(Food::getFats)) fats=true;
+        if(foodstuffs.stream().anyMatch(Food::getCarbohydrates)) carbohydrates=true;
+
 
         if (proteins && fats && carbohydrates)
         {
@@ -71,26 +63,18 @@ public class Cart <T extends Food>{
             return;
         }
 
-        for (var thing : market.getThings(Food.class))
-        {
-            if (!proteins && thing.getProteins())
-            {
-                proteins = true;
-                foodstuffs.add((T)thing);
-            }
-            else if (!fats && thing.getFats())
-            {
-                fats = true;
-                foodstuffs.add((T)thing);
-            }
-            else if (!carbohydrates && thing.getCarbohydrates())
-            {
-                carbohydrates = true;
-                foodstuffs.add((T)thing);
-            }
-            if (proteins && fats && carbohydrates)
-                break;
-        }
+        foodstuffs.addAll((Collection<? extends T>) market.getThings(Food.class).stream()
+                .filter(Food::getProteins)
+                .limit(proteins?0:1).toList());
+
+        foodstuffs.addAll((Collection<? extends T>) market.getThings(Food.class).stream()
+                .filter(Food::getCarbohydrates)
+                .limit(carbohydrates?0:1).toList());
+
+        foodstuffs.addAll((Collection<? extends T>) market.getThings(Food.class).stream()
+                .filter(Food::getFats)
+                .limit(fats?0:1).toList());
+
 
         if (proteins && fats && carbohydrates)
             System.out.println("Корзина сбалансирована по БЖУ.");
