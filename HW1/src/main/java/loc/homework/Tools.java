@@ -9,7 +9,8 @@ public class Tools {
      * Подсчет среднего занчения всех четных чисел в массиве
      *
      * @param numberList
-     * @return вернет среднее арифметическое всех четных чисел в массиве или 0.0 если четных нет.
+     * @return вернет среднее арифметическое всех четных чисел в массиве, 0.0 если четных нет
+     * или null, если если в качестве аргумента пришел null или пустой список
      */
     public static Double getAverageEvenNumbers(List<Integer> numberList) {
         if (numberList==null || numberList.isEmpty())return null;
