@@ -5,7 +5,7 @@ public class Cat extends Animal{
         super(name, age);
     }
 
-    public void makeSound(){
+    public void makeMeau(){
         System.out.println("Мяу!");
     }
 }

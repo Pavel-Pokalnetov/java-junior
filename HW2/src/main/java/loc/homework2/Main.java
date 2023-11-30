@@ -1,16 +1,11 @@
 package loc.homework2;
 
-import java.beans.ConstructorProperties;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws ClassNotFoundException {
-
 
         Animal[] animals = {
                 new Dog("Шарик", 3),
@@ -20,20 +15,31 @@ public class Main {
                 new Cat("Снежок", 6)
         };
 
+        Set<Class<?>> classSet = new HashSet<>();
         for (Animal a : animals) {
-            Class<?> classA = a.getClass();
-            Class<?> seperclassA = classA.getSuperclass();
-            System.out.println(classA.getName());
-            List<Field> fields = Arrays.asList(classA.getDeclaredFields());
-            fields.addAll(Arrays.asList(seperclassA.getDeclaredFields()));
-            fields.forEach(field -> System.out.println(field.getName()));
+            classSet.add(a.getClass());
+        }
+        for (Class<?> clazz : classSet) {
+            System.out.println("Класс: " + clazz.getName());
+            System.out.println("Поля класса");
+            Arrays.stream(clazz.getDeclaredFields())
+                    .forEach(field -> System.out.println("\t" + field.getName()));
+            Arrays.stream(clazz.getSuperclass().getDeclaredFields())
+                    .forEach(field -> System.out.println("\t" + field.getName()));
+            System.out.println("Методы класса");
+            Arrays.stream(clazz.getDeclaredMethods())
+                    .forEach(field -> System.out.println("\t" + field.getName()));
+            Arrays.stream(clazz.getSuperclass().getDeclaredMethods())
+                    .forEach(field -> System.out.println("\t" + field.getName()));
+            System.out.println("-----------------------------------------------");
 
-
-
-            Method[] methods = a.getClass().getMethods();
-
-            System.out.println();
-
+        }
+        for (Animal a : animals) {
+            System.out.println(a);
+            try {
+                Method makeSoundMethod = a.getClass().getMethod("makeSound");
+                makeSoundMethod.invoke(a);
+            } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException ignored) {}
         }
 
     }
