@@ -23,14 +23,14 @@ public class Main {
             System.out.println("Класс: " + clazz.getName());
             System.out.println("Поля класса");
             Arrays.stream(clazz.getDeclaredFields())
-                    .forEach(field -> System.out.println("\t" + field.getName()));
+                    .forEach(field -> System.out.println("\t" + field.getName()+" в классе"));
             Arrays.stream(clazz.getSuperclass().getDeclaredFields())
-                    .forEach(field -> System.out.println("\t" + field.getName()));
+                    .forEach(field -> System.out.println("\t" + field.getName()+" в суперклассе"));
             System.out.println("Методы класса");
             Arrays.stream(clazz.getDeclaredMethods())
-                    .forEach(field -> System.out.println("\t" + field.getName()));
+                    .forEach(field -> System.out.println("\t" + field.getName()+" в классе"));
             Arrays.stream(clazz.getSuperclass().getDeclaredMethods())
-                    .forEach(field -> System.out.println("\t" + field.getName()));
+                    .forEach(field -> System.out.println("\t" + field.getName()+" в суперклассе"));
             System.out.println("-----------------------------------------------");
 
         }

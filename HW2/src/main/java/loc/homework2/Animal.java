@@ -11,7 +11,7 @@ abstract class Animal {
 
     @Override
     public String toString() {
-        return "Animal{" +
+        return this.getClass().getName()+" {" +
                 "name='" + name + '\'' +
                 ", age=" + age +
                 '}';
