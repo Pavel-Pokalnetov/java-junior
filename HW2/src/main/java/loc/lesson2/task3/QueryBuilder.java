@@ -124,12 +124,12 @@ public class QueryBuilder {
                 .append(" WHERE ID=");
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
-            if(field.isAnnotationPresent(Column.class)){
+            if (field.isAnnotationPresent(Column.class)) {
                 field.setAccessible(true);
                 Column colunmAnnotation = field.getAnnotation(Column.class);
-                if (colunmAnnotation.name().equals("id")){
-                 query.append(field.get(obj));
-                 return query.toString();
+                if (colunmAnnotation.name().equals("id")) {
+                    query.append(field.get(obj));
+                    return query.toString();
                 }
             }
         }
