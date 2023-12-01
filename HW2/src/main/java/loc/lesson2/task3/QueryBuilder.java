@@ -12,12 +12,12 @@ public class QueryBuilder {
         if (clazz.isAnnotationPresent(Table.class)) {
             Table tableAnnotation = clazz.getAnnotation(Table.class);
             query
-                .append(tableAnnotation.name())
+                    .append(tableAnnotation.name())
                     .append(" (");
 
             Field[] fields = clazz.getDeclaredFields();
             for (Field field : fields) {
-                if (field.isAnnotationPresent(Column.class)){
+                if (field.isAnnotationPresent(Column.class)) {
                     Column columnAnnotation = field.getAnnotation(Column.class);
                     query.append(columnAnnotation.name()).append(", ");
                 }
@@ -30,7 +30,7 @@ public class QueryBuilder {
             query.append(") VALUES (");
 
             for (Field field : fields) {
-                if (field.isAnnotationPresent(Column.class)){
+                if (field.isAnnotationPresent(Column.class)) {
                     field.setAccessible(true);
                     query.append("'").append(field.get(obj)).append("', ");
                 }
@@ -42,14 +42,12 @@ public class QueryBuilder {
 
             query.append(")");
             return query.toString();
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
 
-    public String buildSelectQuery(Class<?> clazz, UUID primaryKey){
+    public String buildSelectQuery(Class<?> clazz, UUID primaryKey) {
         StringBuilder query = new StringBuilder("SELECT * FROM ");
 
         if (clazz.isAnnotationPresent(Table.class)) {
@@ -108,20 +106,33 @@ public class QueryBuilder {
             }
 
             return query.toString();
-        }
-        else {
+        } else {
             return null;
         }
 
     }
 
-    /**
-     * TODO: Доработать в рамках домашней работы
-     * @param clazz
-     * @param primaryKey
-     * @return
-     */
-    public String buildDeleteQuery(Class<?> clazz, UUID primaryKey){
+
+    public String buildDeleteQuery(Object obj) throws IllegalAccessException {
+        Class<?> clazz = obj.getClass();
+        if (!clazz.isAnnotationPresent(Table.class)) {
+            return null;
+        }
+        StringBuilder query = new StringBuilder("DELETE FROM ");
+        Table tableAnnotation = clazz.getAnnotation(Table.class);
+        query.append(tableAnnotation.name())
+                .append(" WHERE ID=");
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            if(field.isAnnotationPresent(Column.class)){
+                field.setAccessible(true);
+                Column colunmAnnotation = field.getAnnotation(Column.class);
+                if (colunmAnnotation.name().equals("id")){
+                 query.append(field.get(obj));
+                 return query.toString();
+                }
+            }
+        }
         return null;
     }
 
