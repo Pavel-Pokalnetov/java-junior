@@ -6,7 +6,7 @@ public class Main
 {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         System.out.println("-- Исходный объект -----------------------------");
-        Student studentToSave = new Student("Jhon",23,4.24);
+        Student studentToSave = new Student("Linus Benedict Torvalds", 53, 4.69);
         System.out.println(studentToSave);
         FileOutputStream out = new FileOutputStream("Student_Save.bin");
         ObjectOutputStream objectOut = new ObjectOutputStream(out);

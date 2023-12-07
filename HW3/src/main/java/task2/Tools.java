@@ -19,10 +19,9 @@ public class Tools {
         String xmlStudent;
         try {
             xmlStudent = Files.readString(Paths.get(filename), StandardCharsets.UTF_8);
+            return xmlStudent;
         } catch (IOException e) {
             throw new IOException(e);
         }
-        return xmlStudent;
     }
-
 }

@@ -1,10 +1,14 @@
 package task2;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 
 public class Student {
     private String name;
     private int age;
+
+
     transient double GPA;
 
     public Student(String name, int age, double GPA) {
@@ -25,6 +29,7 @@ public class Student {
         return age;
     }
 
+    @JsonIgnore
     public double getGPA() {
         return GPA;
     }
