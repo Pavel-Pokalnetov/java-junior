@@ -7,9 +7,7 @@ import java.io.Serializable;
 public class Student {
     private String name;
     private int age;
-
-
-    transient double GPA;
+    private double GPA;
 
     public Student(String name, int age, double GPA) {
         this.name = name;
