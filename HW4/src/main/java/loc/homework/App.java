@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class App {
-    private final String DELIMITER = "\n===========================================================\n";
+    private static final String DELIMITER = "\n===========================================================\n";
     public static void main(String[] args) {
         CoursesDAO dao = new DataBaseSQLTools(); //объект для работы с DB
         //Создаем исходный список для записи в базу
@@ -18,22 +18,24 @@ public class App {
         dao.saveCourseListToDB(courseList);
 
         //запись одной строки в базу
-        dao.saveOneCourseToDB(new Course(10, "Микроэлектроника и ВТ", 9));
+        Course addCourse = new Course(10, "Микроэлектроника и ВТ", 9);
+        System.out.println(DELIMITER+"Запись одной строки в базу "+addCourse);
+        dao.saveOneCourseToDB(addCourse);
 
         //чтение всей таблицы из базы
-        System.out.println("Чтение всей таблицы из базы");
+        System.out.println(DELIMITER+"Чтение всей таблицы из базы");
         List<Course> courseListRead = dao.readCoursesFromDB();
         printCourses(courseListRead);
 
         //чтение одного элемента по id
         int id = 236;
-        System.out.println("чтение одного элемента по id=" + id);
+        System.out.println(DELIMITER+"чтение одного элемента по id=" + id);
         Course course = dao.readCourseFromDBByID(id);
         System.out.println(course);
 
         //обновление записи по id
-        id = 328;
-        System.out.println("обновление записи по id=" + id);
+        id = 895;
+        System.out.println(DELIMITER+"обновление записи по id=" + id);
         course = new Course("Занимательная кибернетика для самых маленьких", 4);
         System.out.println("до Update: " + dao.readCourseFromDBByID(id));
         dao.updateCoursesByID(course, id);
@@ -41,7 +43,7 @@ public class App {
 
         //удаление записи по полю duration
         int duration=4;
-        System.out.println("Удаление запси по полю duration = "+duration);
+        System.out.println(DELIMITER+"Удаление запси по полю duration = "+duration);
         System.out.printf("удалено %s записей\n",dao.deleteCourseFromDBByDuration(duration));
         printCourses(dao.readCoursesFromDB("from Course"));
     }

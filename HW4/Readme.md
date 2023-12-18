@@ -30,6 +30,96 @@
 - Основной класс для демонтрации работы написанного
   кода https://github.com/Pavel-Pokalnetov/java-junior/blob/hw4/HW4/src/main/java/loc/homework/App.java
 
+Вавод консоли:
+```terminal
+
+===========================================================
+Запись одной строки в базу {id=10, title='Микроэлектроника и ВТ', duration='9'}
+{id=10, title='Микроэлектроника и ВТ', duration='9'}
+
+===========================================================
+Чтение всей таблицы из базы
+{id=876, title='Основы программирования', duration='1'}
+{id=877, title='Web-разработка', duration='6'}
+{id=878, title='Базы данных', duration='2'}
+{id=879, title='Мобильная разработка', duration='12'}
+{id=880, title='Data Science', duration='5'}
+{id=881, title='ИТ-инфраструктура', duration='6'}
+{id=882, title='Информационная безопасность', duration='7'}
+{id=883, title='DevOps', duration='5'}
+{id=884, title='Искусственный интеллект', duration='2'}
+{id=885, title='Киберфизические системы', duration='1'}
+{id=886, title='Микроэлектроника и ВТ', duration='9'}
+{id=888, title='Основы программирования', duration='1'}
+{id=889, title='Web-разработка', duration='6'}
+{id=890, title='Базы данных', duration='2'}
+{id=891, title='Мобильная разработка', duration='12'}
+{id=892, title='Data Science', duration='5'}
+{id=893, title='ИТ-инфраструктура', duration='6'}
+{id=894, title='Информационная безопасность', duration='7'}
+{id=895, title='DevOps', duration='5'}
+{id=896, title='Искусственный интеллект', duration='2'}
+{id=897, title='Киберфизические системы', duration='1'}
+{id=898, title='Микроэлектроника и ВТ', duration='9'}
+{id=900, title='Основы программирования', duration='1'}
+{id=901, title='Web-разработка', duration='6'}
+{id=902, title='Базы данных', duration='2'}
+{id=903, title='Мобильная разработка', duration='12'}
+{id=904, title='Data Science', duration='5'}
+{id=905, title='ИТ-инфраструктура', duration='6'}
+{id=906, title='Информационная безопасность', duration='7'}
+{id=907, title='DevOps', duration='5'}
+{id=908, title='Искусственный интеллект', duration='2'}
+{id=909, title='Киберфизические системы', duration='1'}
+{id=910, title='Микроэлектроника и ВТ', duration='9'}
+
+===========================================================
+чтение одного элемента по id=890
+{id=890, title='Базы данных', duration='2'}
+
+===========================================================
+обновление записи по id=895
+до Update: {id=895, title='DevOps', duration='5'}
+после Update: {id=895, title='Занимательная кибернетика для самых маленьких', duration='4'}
+
+===========================================================
+Удаление запси по полю duration = 4
+удалено 1 записей
+{id=876, title='Основы программирования', duration='1'}
+{id=877, title='Web-разработка', duration='6'}
+{id=878, title='Базы данных', duration='2'}
+{id=879, title='Мобильная разработка', duration='12'}
+{id=880, title='Data Science', duration='5'}
+{id=881, title='ИТ-инфраструктура', duration='6'}
+{id=882, title='Информационная безопасность', duration='7'}
+{id=883, title='DevOps', duration='5'}
+{id=884, title='Искусственный интеллект', duration='2'}
+{id=885, title='Киберфизические системы', duration='1'}
+{id=886, title='Микроэлектроника и ВТ', duration='9'}
+{id=888, title='Основы программирования', duration='1'}
+{id=889, title='Web-разработка', duration='6'}
+{id=890, title='Базы данных', duration='2'}
+{id=891, title='Мобильная разработка', duration='12'}
+{id=892, title='Data Science', duration='5'}
+{id=893, title='ИТ-инфраструктура', duration='6'}
+{id=894, title='Информационная безопасность', duration='7'}
+{id=896, title='Искусственный интеллект', duration='2'}
+{id=897, title='Киберфизические системы', duration='1'}
+{id=898, title='Микроэлектроника и ВТ', duration='9'}
+{id=900, title='Основы программирования', duration='1'}
+{id=901, title='Web-разработка', duration='6'}
+{id=902, title='Базы данных', duration='2'}
+{id=903, title='Мобильная разработка', duration='12'}
+{id=904, title='Data Science', duration='5'}
+{id=905, title='ИТ-инфраструктура', duration='6'}
+{id=906, title='Информационная безопасность', duration='7'}
+{id=907, title='DevOps', duration='5'}
+{id=908, title='Искусственный интеллект', duration='2'}
+{id=909, title='Киберфизические системы', duration='1'}
+{id=910, title='Микроэлектроника и ВТ', duration='9'}
+
+Process finished with exit code 0
+```
 Шпаргалка по докер для домашки
 Запуск контейнера MariaDB в Docker:
 
