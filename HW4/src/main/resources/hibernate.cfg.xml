@@ -12,4 +12,5 @@
         <property name="hibernate.connection.pool_size">1</property>
         <mapping class="loc.homework.model.Course"/>
     </session-factory>
+
 </hibernate-configuration>
