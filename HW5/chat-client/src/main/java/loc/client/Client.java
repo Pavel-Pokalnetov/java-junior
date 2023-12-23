@@ -16,32 +16,46 @@ public class Client {
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
-            try {
-                closeEverything(socket, bufferedWriter, bufferedReader);
-            } catch (IOException i) {
-                i.printStackTrace();
-                new RuntimeException(i);
-            }
+            closeEverything(socket, bufferedWriter, bufferedReader);
         }
     }
 
-    private void closeEverything(Socket socket, BufferedWriter bufferedWriter, BufferedReader bufferedReader) throws IOException {
-        if (bufferedReader != null) {
-            bufferedReader.close();
+    private void closeEverything(Socket socket, BufferedWriter bufferedWriter, BufferedReader bufferedReader) {
+        try {
+            if (bufferedReader != null) {
+                bufferedReader.close();
+            }
+            if (bufferedWriter != null) {
+                bufferedWriter.close();
+            }
+            if (socket != null) {
+                socket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        if (bufferedWriter != null) {
-            bufferedWriter.close();
-        }
-        if (socket != null) {
-            socket.close();
-        }
+
     }
+
 
     /**
      * Слушатель входящих сообщений от сервера
      */
     public void listenForMessage() {
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String message;
+                while (socket.isConnected()) {
+                    try {
+                        message = bufferedReader.readLine();
+                        System.out.println(message);
+                    } catch (IOException e) {
+                        closeEverything(socket, bufferedWriter, bufferedReader);
+                    }
+                }
+            }
+        }).start();
     }
 
     /**
