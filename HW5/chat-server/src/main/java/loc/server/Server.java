@@ -1,8 +1,27 @@
 package loc.server;
 
-public class Server {
-    public static void main(String[] args) {
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
-        System.out.println("Server start.");
+public class Server {
+    private final int PORT = 1425;
+    private final ServerSocket serverSocket;
+    public Server() throws IOException {
+        serverSocket = new ServerSocket(PORT);
+    }
+    public void start(){
+
+        try{
+            while (!serverSocket.isClosed()) {
+                Socket socket = serverSocket.accept();
+                ClientManager clientManager = new ClientManager(socket)
+                System.out.println("Подключение клиента");
+                Thread clientThread = new Thread(clientManager);
+                clientThread.start();
+            }
+        }catch (IOException e){
+
+        }
     }
 }
