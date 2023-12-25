@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Client (4)" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="loc.client.AppClient" />
+    <module name="chat-client" />
+    <option name="PROGRAM_PARAMETERS" value="Jhon" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

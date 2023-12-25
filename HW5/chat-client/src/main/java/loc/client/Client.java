@@ -51,7 +51,6 @@ public class Client {
         if (!socket.isConnected())
             return null;
         try {
-
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
@@ -89,9 +88,15 @@ public class Client {
                 while (socket.isConnected()) {
                     try {
                         message = bufferedReader.readLine();
-                        if (message != null) System.out.println(message);
+                        if (message != null) {
+                            if("#DISCONNECT".equals(message)){
+                                throw new IOException("принудительное отключение");
+                            }
+                            System.out.println(message);
+                        }
                     } catch (IOException e) {
                         closeEverything(socket, bufferedWriter, bufferedReader);
+                        System.exit(1);
                     }
                 }
             }

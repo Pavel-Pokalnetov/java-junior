@@ -3,8 +3,11 @@ package loc.server;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ClientManager implements Runnable {
     public static final String SEPARATOR = "&&";
@@ -26,13 +29,30 @@ public class ClientManager implements Runnable {
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             name = bufferedReader.readLine();
-            if (name.equalsIgnoreCase("all")) throw new IOException();
+            if (name.equalsIgnoreCase("all")) {
+                sendMessage("клиент с именем @" + name + " зарезервирован как служебный, используйте другое имя");
+                sendMessage("#DISCONNECT");
+                throw new Exception("попыдка подключения с зарезервированным именем");
+            }
+            if (nameIsExist(name)) {
+                sendMessage("клиент с именем @" + name + " уже подключен к серверу, используйте другое имя");
+                sendMessage("#DISCONNECT");
+                throw new Exception("подключения с уже имеющимся именем");
+            }
+            broadcastMessage("*** Подключился @" + name);
             clients.put(socketClient, this);
-            broadcastMessage("*** Подключился @"+name);
-        } catch (IOException e) {
-            e.printStackTrace();
+            sendMessage(name + ", добро пожаловать в чат, напишите #help для справки");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             closeEverithing(socket, bufferedWriter, bufferedReader);
         }
+    }
+
+    private boolean nameIsExist(String name) {
+        for (Map.Entry<String, ClientManager> entry : clients.entrySet()) {
+            if (name.equals(entry.getValue().getName())) return true;
+        }
+        return false;
     }
 
     @Override
@@ -46,7 +66,7 @@ public class ClientManager implements Runnable {
 
                 System.out.printf("Клиент %s: %s\n", name, messageFromClient);
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 closeEverithing(socket, bufferedWriter, bufferedReader);
                 break;
             }
@@ -54,19 +74,30 @@ public class ClientManager implements Runnable {
 
     }
 
-    private void messageProcessing(String messageFromClient) {
+    /** Обработка входящих сообщений
+     * @param messageFromClient
+     * @throws Exception
+     */
+    private void messageProcessing(String messageFromClient) throws Exception {
         if (messageFromClient != null) {
             char firsChar = messageFromClient.toCharArray()[0];
             if ('#' == firsChar) {//пришла команда
                 if ("#who".equalsIgnoreCase(messageFromClient)) {
                     // пока одна команда #who - кто есть на сервере
-                    StringBuffer msg = new StringBuffer("Сейчас онлайн:\n");
-                    clients.forEach((key, val) -> {
-                        msg.append("@").append(val.getName()).append("\n");
-                    });
-                    sendMessage(msg.toString());
+                    sendMessage(whoIsOnline());
+                } else if ("#help".equalsIgnoreCase(messageFromClient)) {
+                    String text = Files.readString(Paths.get(Objects.requireNonNull(getClass()
+                                    .getClassLoader()
+                                    .getResource("help.txt"))
+                            .toURI()));
+                    sendMessage(text);
+
+                } else if ("#exit".equalsIgnoreCase(messageFromClient)) {
+                    sendMessage("Удачи!");
+                    sendMessage("#DISCONNECT");
+                    throw new Exception("отключение по команде #exit");
                 } else {
-                    sendMessage("Команда не распознана");
+                    sendMessage("*** команда не распознана.Отправьте #help - для получения справки");
                 }
 
             } else if ('@' == firsChar) { //пришло адресное или общее сообщение
@@ -75,26 +106,45 @@ public class ClientManager implements Runnable {
                  *   `Text_string` или `@All, Text_String` - сообщение для всех
                  *   `@Name, Text_String` - частное сообщение
                  */
-                String[] splitMessage = messageFromClient.substring(1).split(",", 2);
+                String[] splitMessage = messageFromClient.substring(1).split(" ", 2);
                 if (!splitMessage[0].equalsIgnoreCase("all")) {
                     String toClient = splitMessage[0];
-                    String msg = splitMessage[1];
-                    privateMessage(toClient, msg);
+                    if (nameIsExist(toClient)) {
+                        String msg = splitMessage[1];
+                        privateMessage(toClient, msg);
+                    } else {
+                        sendMessage("*** клиента @" + toClient + " нет на сервере");
+                    }
                 }
-            } else {// если не команда считаем что пришло общее сообщение
-                broadcastMessage("@" + name + ": " + messageFromClient);
+            } else {// в крайнем случае считаем, что пришло общее сообщение
+                broadcastMessage("   @" + name + ": " + messageFromClient);
             }
 
         }
     }
 
+    /** Отправка личных сообщений
+     * @param toClient  - имя адресата
+     * @param msg - текст сообщения
+     */
     private void privateMessage(String toClient, String msg) {
         for (Map.Entry<String, ClientManager> entry : clients.entrySet()) {
             if (toClient.equals(entry.getValue().getName())) {
-                entry.getValue().sendMessage(">>@" + name + ":  " + msg);
+                entry.getValue().sendMessage(">>> @" + name + ":  " + msg);
                 break;
             }
         }
+    }
+
+    /** Возвращает список клиентов подключенных к серверу (в виде текста для отправки)
+     * @return
+     */
+    private static String whoIsOnline() {
+        StringBuffer msg = new StringBuffer("*** Сейчас онлайн:\n");
+        clients.forEach((key, val) -> {
+            msg.append("*** @").append(val.getName()).append("\n");
+        });
+        return msg.toString();
     }
 
     private void broadcastMessage(String message) {
@@ -127,9 +177,11 @@ public class ClientManager implements Runnable {
     }
 
     private void removeClient() {
-        clients.remove(this.socketClient);
-        System.out.println("Клиент " + this.name + " покинул чат");
-        broadcastMessage("Клиент " + this.name + " покинул чат");
+        if (clients.remove(this.socketClient) != null) {
+            broadcastMessage("*** " + this.name + " покинул чат");
+            System.out.println("Клиент " + this.name + " покинул чат");
+        }
+        clients.forEach((k, v) -> System.out.println(k + " | " + v.getName()));
     }
 
 

@@ -32,10 +32,9 @@ public class AppClient {
                 throw new AppExeption("Нет соединения с сервером");
             }
             InetAddress inetAddress = socket.getInetAddress();
-            System.out.println("InetAddress: " + inetAddress.toString().split("/")[1]);
             String remoteIP = inetAddress.getHostAddress();
-            System.out.println("Remote IP: " + remoteIP);
-            System.out.println("LocalPort: " + socket.getLocalPort());
+            System.out.println("Сервер: " + remoteIP+":" + socket.getLocalPort());
+            System.out.println("Ваш логин @"+name);
             System.out.println("--------------------------------------");
             client.listenForMessage();
             client.sendMessage();

@@ -15,12 +15,13 @@ public class Server {
     }
 
     public void start() {
-
+        System.out.print("Server started on ");
         try {
+            System.out.printf("local ip=%s, port=%d\n",serverSocket.getInetAddress().getHostAddress(),serverSocket.getLocalPort());
             while (!serverSocket.isClosed()) {
                 Socket socket = serverSocket.accept();
                 ClientManager clientManager = new ClientManager(socket);
-                System.out.println("Подключение клиента "+clientManager.getName()+" | "+clientManager.getSocketClient());
+                System.out.println("Client connected "+clientManager.getName()+" | "+clientManager.getSocketClient());
                 Thread clientThread = new Thread(clientManager);
                 clientThread.start();
             }
