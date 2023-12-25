@@ -7,9 +7,8 @@ import java.net.SocketException;
 import java.util.Scanner;
 
 public class Client {
-
-    private final Character SEPARATOR = '&'; // разделитель данных в сообщении
-    private int connectionAttemptCounter = 10; // число попыток подключения к серверу
+    public static final String SEPARATOR = "&&";
+    private int connectionAttemptCounter = 20; // число попыток подключения к серверу (4 попытки в сек)
     private final String name; // имя клиента
     private final int port; // порт сервера
     private final String serverIP; // адрес сервера
@@ -36,21 +35,23 @@ public class Client {
      */
     public Socket connect() throws IOException, InterruptedException {
         InetSocketAddress inetAddress = new InetSocketAddress(serverIP, port);
-        long startTime = System.currentTimeMillis();
         while (connectionAttemptCounter-- > 0) {
             try {
                 socket.connect(inetAddress);
             } catch (SocketException ignored) {
 
             }
-            if (socket.isConnected()) break;
-            Thread.sleep(300);
+            if (socket.isConnected()) {
+                System.out.println("Connected!!!");
+                break;
+            }
+            Thread.sleep(250);
             System.out.print(".");
         }
-        System.out.println();
         if (!socket.isConnected())
             return null;
         try {
+
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
@@ -108,7 +109,8 @@ public class Client {
             Scanner scanner = new Scanner(System.in);
             while (socket.isConnected()) {
                 String message = scanner.nextLine();
-                bufferedWriter.write(name + SEPARATOR + message + "\n");
+                bufferedWriter.write(message);
+                bufferedWriter.newLine();
                 bufferedWriter.flush();
             }
 

@@ -2,10 +2,11 @@ package loc.server;
 
 import loc.server.Server;
 
+import java.io.IOException;
+
 public class AppServer {
-    private static final int PORT = 1425;
-    public static void main(String[] args) {
-        Server server = new Server(PORT);
+    public static void main(String[] args) throws IOException {
+        Server server = new Server();
         server.start();
     }
 }
