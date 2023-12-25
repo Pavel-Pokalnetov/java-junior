@@ -5,14 +5,14 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientManager implements Runnable {
     public static final String SEPARATOR = "&&";
     private final Socket socket;
-    public static HashMap<String, ClientManager> clients = new HashMap<>();
+    public static ConcurrentHashMap<String, ClientManager> clients = new ConcurrentHashMap<>();
 
     private String name;
 
@@ -177,12 +177,12 @@ public class ClientManager implements Runnable {
     }
 
     private void removeClient() {
-        if (clients.remove(this.socketClient) != null) {
-            broadcastMessage("*** " + this.name + " покинул чат");
-            System.out.println("Клиент " + this.name + " покинул чат");
+            if (clients.remove(this.socketClient) != null) {
+                broadcastMessage("*** " + this.name + " покинул чат");
+                System.out.println("Клиент " + this.name + " покинул чат");
+            }
+            clients.forEach((k, v) -> System.out.println(k + " | " + v.getName()));
         }
-        clients.forEach((k, v) -> System.out.println(k + " | " + v.getName()));
-    }
 
 
     public String getName() {

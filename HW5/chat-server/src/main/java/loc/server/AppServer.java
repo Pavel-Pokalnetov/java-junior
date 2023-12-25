@@ -1,7 +1,5 @@
 package loc.server;
 
-import loc.server.Server;
-
 import java.io.IOException;
 
 public class AppServer {
